@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube 滿版播放</title>
+  <style>
+    /* 讓 html 和 body 滿版 */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* 避免出現捲軸 */
+    }
+
+    /* iframe 絕對定位，填滿整個畫面 */
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- 把 VIDEO_ID 換成你的 YouTube 影片 ID -->
+  <iframe src="https://www.youtube.com/watch?v=t9GDNvAmJ_c" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          allowfullscreen></iframe>
+</body>
+</html>
