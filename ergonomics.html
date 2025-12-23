@@ -2,62 +2,155 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<title>Resizable Menu Demo</title>
+
 <style>
   body {
     margin: 0;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
   }
+
   .container {
     display: flex;
     height: 100vh;
+    overflow: hidden;
   }
+
+  /* 左邊選單 */
   .menu {
-    width: 200px;
+    width: 240px;           /* 初始寬度 */
+    min-width: 120px;
+    max-width: 400px;
     background: #f2f2f2;
     padding: 10px;
+    box-sizing: border-box;
   }
+
   .menu li {
     list-style: none;
     padding: 8px;
     cursor: pointer;
   }
-  .menu li:hover {
+
+  .menu li:hover,
+  .menu li.active {
     background: #ddd;
   }
+
+  /* 中間分隔線 */
+  .divider {
+    width: 5px;
+    cursor: col-resize;
+    background: #ccc;
+  }
+
+  /* 右邊內容 */
   .content {
     flex: 1;
     padding: 20px;
+    overflow: auto;
+  }
+
+  /* YouTube RWD */
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    margin-top: 10px;
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 </style>
 </head>
 
 <body>
-<div class="container">
-  <!-- 左邊 -->
-  <ul class="menu">
-    <li onclick="showContent('a')">頁面 A</li>
-    <li onclick="showContent('b')">頁面 B</li>
-    <li onclick="showContent('c')">頁面 C</li>
-  </ul>
 
-  <!-- 右邊 -->
-  <div class="content" id="content">
-    請選擇左邊選單
-  </div>
+<div class="container">
+  <ul class="menu" id="menu"></ul>
+  <div class="divider" id="divider"></div>
+  <div class="content" id="content">請選擇左邊選單</div>
 </div>
 
 <script>
-function showContent(type) {
-  const content = document.getElementById('content');
-
-  if (type === 'a') {
-    content.innerHTML = "<h2>這是 A</h2><p>A 的內容</p>";
-  } else if (type === 'b') {
-    content.innerHTML = "<h2>這是 B</h2><p>B 的內容</p>";
-  } else if (type === 'c') {
-    content.innerHTML = "<h2>這是 C</h2><p>C 的內容</p>";
+/* 資料來源（方式二） */
+const pages = [
+  {
+    title: "01 Floating Hands and MultiPose",
+    videoId: "1TK7Z2mKARo",
+    desc: "Floating hands + MultiPose demo"
+  },
+  {
+    title: "02 Copy and Paste",
+    videoId: "0bh-dkYO8WU",
+    desc: "Copy and paste workflow demo"
   }
+];
+
+/* YouTube embed */
+function youtubeEmbed(videoId) {
+  return `
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/${videoId}"
+        frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  `;
 }
+
+/* 顯示頁面 */
+function showPage(index) {
+  const p = pages[index];
+  const content = document.getElementById("content");
+
+  document
+    .querySelectorAll(".menu li")
+    .forEach((li, i) => li.classList.toggle("active", i === index));
+
+  content.innerHTML = `
+    <h2>${p.title}</h2>
+    <p>${p.desc}</p>
+    ${youtubeEmbed(p.videoId)}
+  `;
+}
+
+/* 產生左邊 menu */
+const menu = document.getElementById("menu");
+pages.forEach((p, i) => {
+  const li = document.createElement("li");
+  li.textContent = p.title;
+  li.onclick = () => showPage(i);
+  menu.appendChild(li);
+});
+
+/* ===== 分隔線拖曳邏輯 ===== */
+const divider = document.getElementById("divider");
+const menuEl = document.querySelector(".menu");
+let dragging = false;
+
+divider.addEventListener("mousedown", () => {
+  dragging = true;
+  document.body.style.cursor = "col-resize";
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!dragging) return;
+  const newWidth = e.clientX;
+  menuEl.style.width = `${newWidth}px`;
+});
+
+document.addEventListener("mouseup", () => {
+  dragging = false;
+  document.body.style.cursor = "";
+});
 </script>
+
 </body>
 </html>
