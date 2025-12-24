@@ -6,16 +6,13 @@
 <title>Visual Components x Work(s) Ergo</title>
 
 <style>
-/* =========================
-   Base
-========================= */
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 /* =========================
-   Glass Header (Desktop + Mobile)
+   Glass Header
 ========================= */
 .app-header {
   position: sticky;
@@ -27,15 +24,12 @@ body {
   padding: 12px 16px;
   font-size: 18px;
   font-weight: bold;
-
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-
   border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
-/* Hamburger (mobile only) */
 #menuToggle {
   display: none;
   font-size: 22px;
@@ -53,7 +47,6 @@ body {
   overflow: hidden;
 }
 
-/* Left Menu (Desktop) */
 .menu {
   width: 360px;
   min-width: 360px;
@@ -74,14 +67,12 @@ body {
   background: #ddd;
 }
 
-/* Divider */
 .divider {
   width: 5px;
   background: #ccc;
   cursor: col-resize;
 }
 
-/* Content */
 .content {
   flex: 1;
   padding: 20px;
@@ -89,7 +80,7 @@ body {
 }
 
 /* =========================
-   YouTube RWD
+   YouTube
 ========================= */
 .video-wrapper {
   width: 100%;
@@ -105,16 +96,11 @@ body {
 }
 
 /* =========================
-   Mobile Drawer Mode
+   Mobile
 ========================= */
 @media (max-width: 768px) {
-
   #menuToggle {
     display: inline-block;
-  }
-
-  .container {
-    height: calc(100vh - 56px);
   }
 
   .menu {
@@ -123,7 +109,6 @@ body {
     left: -280px;
     width: 280px;
     height: calc(100vh - 56px);
-    min-width: unset;
     background: #f2f2f2;
     z-index: 999;
     transition: left 0.25s ease;
@@ -146,10 +131,17 @@ body {
 
 <body>
 
-<!-- Glass Header -->
+<!-- Header -->
 <div class="app-header">
   <button id="menuToggle">☰</button>
-  <a href="https://www.visualcomponents.com" target="_blank" rel="noopener noreferrer" class="header-link">Visual Components</a> x <a href="https://www.worksergo.com" target="_blank" rel="noopener noreferrer" class="header-link">Work(s) Ergo</a>
+  <a href="https://www.visualcomponents.com" target="_blank">Visual Components</a>
+  x
+  <a href="https://www.worksergo.com" target="_blank">Work(s) Ergo</a>
+
+  <!-- Counter -->
+  <span id="clickCounter" style="margin-left:auto;font-weight:normal;">
+    Views: 0
+  </span>
 </div>
 
 <div class="container">
@@ -168,24 +160,31 @@ const pages = [
   {
     title: "01 Floating Hands and MultiPose",
     videoId: "1TK7Z2mKARo",
-    desc: `Simply place the Floating Hands at the desired position in Visual Components, all data will be transmitted to the Work(s) Ergo ergonomics engine, which will automatically calculate multiple feasible postures and generate an analysis report.`
+    desc: "Simply place the Floating Hands at the desired position in Visual Components..."
   },
   {
     title: "02 Copy and Paste",
     videoId: "0bh-dkYO8WU",
-    desc: `All the features of Work(s) Ergo ergonomics engine will be integrated into a single component and placed on the Visual Components eCatalogue for two major reasons: 1. The eCatalogue offers extremely fast update responses, once a fix is made, updates can be pushed in as little as a few dozen minutes without needing to wait for a full software release. 2. It supports copy-paste, meaning you can complete the setup for three different heights on a warehouse shelf in under a minute and get the the analysis report along with dozens of feasible postures before your coffee is even finished brewing.`
+    desc: "All the features of Work(s) Ergo ergonomics engine will be integrated..."
   },
   {
     title: "03 Obstructed Eye Gaze and Eye View",
     videoId: "m6IJ2ifP5dE",
-    desc: `Work(s) Ergo ergonomics engine allows users to set the gaze target for DHM and optionally enable obstruction avoidance. These settings can be configured very intuitively in Visual Components, with real-time display of the current eye view.`
+    desc: "Work(s) Ergo ergonomics engine allows users to set the gaze target..."
   },
   {
     title: "Coming soon",
     videoId: "",
-    desc: ``
+    desc: ""
   }
 ];
+
+/* =========================
+   Counter (防呆)
+========================= */
+let viewCount = 0;
+let lastIndex = null;
+const counterEl = document.getElementById("clickCounter");
 
 /* =========================
    YouTube
@@ -194,10 +193,7 @@ function youtubeEmbed(id) {
   if (!id) return "";
   return `
     <div class="video-wrapper">
-      <iframe
-        src="https://www.youtube.com/embed/${id}"
-        allowfullscreen>
-      </iframe>
+      <iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>
     </div>
   `;
 }
@@ -206,6 +202,14 @@ function youtubeEmbed(id) {
    Show Page
 ========================= */
 function showPage(index) {
+
+  // 防呆：同一頁不重複計數
+  if (index !== lastIndex) {
+    viewCount++;
+    counterEl.textContent = `Views: ${viewCount}`;
+    lastIndex = index;
+  }
+
   const p = pages[index];
   content.innerHTML = `
     <h2>${p.title}</h2>
@@ -242,7 +246,7 @@ document.getElementById("menuToggle").onclick = () => {
 };
 
 /* =========================
-   Divider Drag (Desktop)
+   Divider Drag
 ========================= */
 const divider = document.getElementById("divider");
 let dragging = false;
@@ -259,10 +263,8 @@ document.addEventListener("mouseup", () => {
 
 document.addEventListener("mousemove", e => {
   if (!dragging || window.innerWidth <= 768) return;
-
   const rect = document.querySelector(".container").getBoundingClientRect();
   const w = e.clientX - rect.left;
-
   if (w > 200 && w < 600) {
     menu.style.width = w + "px";
   }
