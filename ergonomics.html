@@ -191,6 +191,7 @@ const pages = [
    YouTube
 ========================= */
 function youtubeEmbed(id) {
+  if (!id) return "";
   return `
     <div class="video-wrapper">
       <iframe
