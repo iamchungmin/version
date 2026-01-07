@@ -170,7 +170,7 @@ body {
 ========================= */
 const pages = [
   {
-    title: "Contact",
+    title: "--- Contact",
     videoId: "",
     desc: `
     Visual Components: <a href="mailto:Mustafa.Kamal@VisualComponents.com">Mustafa.Kamal@VisualComponents.com</a><br>
@@ -178,7 +178,7 @@ const pages = [
     `
   },
   {
-    title: "Analysis Tools",
+    title: "--- Analysis Tools",
     image: "https://iamchungmin.github.io/playground/AnalysisTools.png",
     videoId: "",
     desc: ``
@@ -280,15 +280,13 @@ function youtubeEmbed(id) {
 ========================= */
 function showPage(index) {
   const p = pages[index];
-
-  // 1. 建立圖片 HTML (如果該頁面有 image 屬性)
+  
   const imgHtml = p.image ? `
-    <div class="video-wrapper">
-      <img src="${p.image}" style="width:100%; height:100%; object-fit: contain; border-radius: 4px; background: #000;">
+    <div style="width: 100%; margin-top: 12px;">
+      <img src="${p.image}" style="width: 100%; height: auto; display: block; border-radius: 4px;">
     </div>
   ` : "";
 
-  // 2. 這裡要把 ${imgHtml} 放進去內容中
   content.innerHTML = `
     <h2>${p.title}</h2>
     <div style="line-height: 1.6;">${p.desc}</div>
